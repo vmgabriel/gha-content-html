@@ -1,0 +1,17 @@
+name: 'Action Test'
+description: 'Action Test'
+author: 'vmgabriel'
+branding:
+  icon: 'git-branch'
+  color: 'gray-dark'
+inputs:
+  body:
+    description: 'Body Content'
+    required: true
+    default: ''
+outputs:
+  html_data:
+    description: 'Html Data'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
