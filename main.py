@@ -14,7 +14,7 @@ email_info = template.render(**{
     "content": body,
 })
 
-core.info("Content body -", body)
-core.info("Email body -", email_info)
+core.info(f"Content body - { body }")
+core.info(f"Email body - {email_info}")
 
 core.set_output('html_data', email_info)
