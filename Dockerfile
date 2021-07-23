@@ -1,8 +1,13 @@
-FROM python:3
+FROM python:3-slim AS builder
+ADD . /app
+WORKDIR /app
 
-# WORKDIR /app
-COPY . ./
+# We are installing a dependency here directly into our app source dir
+RUN pip install --target=/app requests
 
-RUN pip install -r requirements.txt
 
-CMD ["./main.py"]
+FROM gcr.io/distroless/python3-debian10
+COPY --from=builder /app /app
+WORKDIR /app
+ENV PYTHONPATH /app
+CMD ["/app/main.py"]
