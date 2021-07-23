@@ -1,13 +1,8 @@
-FROM python:3-slim AS builder
-ADD . /app
+FROM python:3
+
 WORKDIR /app
+COPY . ./
 
-COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
 
-RUN pip install --target=/app -r requirements.txt
-
-FROM gcr.io/distroless/python3-debian10
-COPY --from=builder . /app
-WORKDIR /app
-ENV PYTHONPATH /app
 CMD ["./main.py"]

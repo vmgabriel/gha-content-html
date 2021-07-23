@@ -1,19 +1,20 @@
 """Main Application"""
 
 from actions_toolkit import core
-from jinja2 import Environment, select_autoescape, FileSystemLoader
+from jinja2 import Template
 
 
-content_body = core.get_input('body', required=True)
+template = core.get_input('template', required=True)
+body = core.get_input('body', required=True)
 
-env = Environment(loader=FileSystemLoader("app"), autoescape=select_autoescape())
-template = env.get_template("template.html")
+template_content = open(template, "r").read()
+template = Template(template_content)
 
 email_info = template.render(**{
-    "content_body": content_body
+    "content": body,
 })
 
-core.info("Content body -", content_body)
+core.info("Content body -", body)
 core.info("Email body -", email_info)
 
 core.set_output('html_data', email_info)
