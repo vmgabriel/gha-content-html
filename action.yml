@@ -5,6 +5,10 @@ branding:
   icon: 'git-branch'
   color: 'gray-dark'
 inputs:
+  template:
+    description: 'Template html file'
+    required: true
+    default: ''
   body:
     description: 'Body Content'
     required: true
