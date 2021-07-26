@@ -1,12 +1,11 @@
 """Main Application"""
 
-import markdown
-from markupsafe import Markup
+from markdown2 import Markdown
 import jinja2
 from actions_toolkit import core
 
 
-md = markdown.Markdown(extensions=['meta'])
+md = Markdown()
 
 template = core.get_input('template', required=True)
 body = core.get_input('body', required=True)
@@ -15,7 +14,7 @@ template_content = open(template, "r").read()
 
 
 env = jinja2.Environment()
-env.filters['markdown'] = lambda text: Markup(md.convert(text))
+env.filters['markdown'] = lambda text: str(md.convert(text))
 env.trim_blocks = True
 env.lstrip_blocks = True
 
