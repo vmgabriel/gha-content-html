@@ -13,9 +13,15 @@ inputs:
     description: 'Body Content'
     required: true
     default: ''
+  message_branch:
+    description: 'Name of branch for generate module'
+    required: true
+    default: ''
 outputs:
   html_data:
     description: 'Html Data'
+  level:
+    description: 'Level Content related to message commit if content message include {major|minor|patch}'
 runs:
   using: 'docker'
   image: 'Dockerfile'
