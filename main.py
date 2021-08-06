@@ -78,6 +78,8 @@ for content in main_content:
     dict_content[content.split("(->)")[0]] = data_content
 main_content = dict_content
 
+core.info(f"Email body - {main_content}")
+
 email_info = env.from_string(template_content).render(**{
     "content": body,
     "json_content": main_content,
