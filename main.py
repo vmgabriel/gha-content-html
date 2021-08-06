@@ -1,9 +1,7 @@
-
 """Main Application"""
 
-import jinja2
-import json
 from typing import List
+import jinja2
 from markdown2 import Markdown
 from actions_toolkit import core
 
@@ -26,7 +24,17 @@ email_info = env.from_string(template_content).render(**{
 })
 
 
+def get_content_relese(content: str) -> dict:
+    """Generate Content of release note description"""
+    content_to_split = "## Release Note Description:"
+    content_data = content.split(content_to_split)
+    if len(content_data) > 1:
+        return content_data[-1]
+    return ""
+
+
 def convert_to_list(content_str: str) -> List[dict]:
+    """Convert to List"""
     prs = content_str.split("(^)")[:-1]
     content_prs = []
     for pr in prs:
@@ -34,7 +42,12 @@ def convert_to_list(content_str: str) -> List[dict]:
         pr_datas = pr.split("(~)")
         for pr_data in pr_datas:
             min_data = pr_data.split("(|)")
-            content_pr[min_data[0]] = min_data[1]
+            min_data_content = min_data[1]
+            if min_data[0] == "body":
+                min_data_content = get_content_relese(min_data_content)
+                if min_data_content != "":
+                    min_data_content = md.convert(min_data_content)
+            content_pr[min_data[0]] = min_data_content
         content_prs.append(content_pr)
     return content_prs
 
@@ -55,6 +68,9 @@ for content in main_content:
                 data_content[(2 * cont_pos) + 1]
             )
         data_content = state_content
+
+    if content.split("(->)")[0] == INTERN_CONTENTS[0] and data_content == "":
+        data_content = []
 
     if content.split("(->)")[0] in INTERN_CONTENTS[1:]:
         data_content = convert_to_list(data_content)
