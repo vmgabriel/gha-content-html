@@ -19,10 +19,6 @@ env.filters['markdown'] = lambda text: str(md.convert(text))
 env.trim_blocks = True
 env.lstrip_blocks = True
 
-email_info = env.from_string(template_content).render(**{
-    "content": body,
-})
-
 
 def get_content_relese(content: str) -> dict:
     """Generate Content of release note description"""
