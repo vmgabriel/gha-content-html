@@ -20,12 +20,7 @@ env.trim_blocks = True
 env.lstrip_blocks = True
 
 def change_to_md(change: dict) -> str:
-    return f"""#### [Title: {change.get('title')} - PR: {change.get('number')}]({change.get('url')}, "url")
-    Merged At: {change.get('mergedat')}
-    Author: {change.get('author')}
-    Body:
-    {change.get('body')}\n
-    """
+    return f"""#### [Title: {change.get('title')} - PR: {change.get('number')}]({change.get('url')}, "url")\nMerged At: {change.get('mergedat')}\nAuthor: {change.get('author')}\nBody:\n{change.get('body')}\n"""
 
 def to_markdown(content: dict) -> str:
     changelog = ""
@@ -62,25 +57,7 @@ def to_markdown(content: dict) -> str:
             [change_to_md(change) for change in content.get("ignored")]
         )
 
-    print(content)
-
-    return f"""
-    # Fithub {content.get('repo')}
-    ## Update:
-       {content.get('fromtag')} -> {content.get('totag')}
-    -----
-    Count Categorized: {content.get('categorizedcount')}
-
-    {changelog}
-    -----
-    Count Uncategorized: {content.get('uncategorizedcount')}
-
-    {uncategorized}
-    -----
-    Count Ignored: {content.get('ignored_count')}
-
-    {ignored}
-    """
+    return f"""#Fithub {content.get('repo')}\n## Update:\n  {content.get('fromtag')} -> {content.get('totag')}\n-----\n## Count Categorized: {content.get('categorizedcount')}\n\n{changelog}\n-----\n## Count Uncategorized: {content.get('uncategorizedcount')}\n\n{uncategorized}\n-----\n## Count Ignored: {content.get('ignored_count')}\n\n{ignored}"""
 
 
 def get_content_relese(content: str) -> dict:
