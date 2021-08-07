@@ -16,6 +16,8 @@ inputs:
 outputs:
   html_data:
     description: 'Html Data'
+  markdown_data:
+    description: 'Content related to mardown data'
 runs:
   using: 'docker'
   image: 'Dockerfile'

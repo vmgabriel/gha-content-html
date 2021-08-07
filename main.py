@@ -19,6 +19,67 @@ env.filters['markdown'] = lambda text: str(md.convert(text))
 env.trim_blocks = True
 env.lstrip_blocks = True
 
+def change_to_md(change: dict) -> str:
+    return f"""#### [Title: {change['title']} - PR: {change['number']}]({change['url']}, "url")
+    Merged At: {change['mergedat']}
+    Author: {change['author']}
+    Body:
+    {change['body']}\n
+    """
+
+def to_markdown(content: dict) -> str:
+    changelog = ""
+    if content["changelog"]:
+        if content["changelog"]["Features"]:
+            changelog += "### Features\n"
+            changelog += "".join(
+                [change_to_md(change) for change in content["changelog"]["Features"]]
+            )
+
+        if content["changelog"]["Fixes"]:
+            changelog += "### Fixes\n"
+            changelog += "".join(
+                [change_to_md(change) for change in content["changelog"]["Fixes"]]
+            )
+
+        if content["changelog"]["Tests"]:
+            changelog += "### Tests\n"
+            changelog += "".join(
+                [change_to_md(change) for change in content["changelog"]["Tests"]]
+            )
+
+    uncategorized = ""
+    if content["uncategorized"]:
+        uncategorized += "### Uncategorized\n"
+        uncategorized += "".join(
+            [change_to_md(change) for change in content["uncategorized"]]
+        )
+
+    ignored = ""
+    if content["ignored"]:
+        ignored += "### Ignored\n"
+        ignored += "".join(
+            [change_to_md(change) for change in content["ignored"]]
+        )
+
+    return f"""
+    # Fithub {content['repo']}
+    ## Update:
+       {content['fromtag']} -> {content['totag']}
+    -----
+    Count Categorized: {content['categorizedcount']}
+
+    {changelog}
+    -----
+    Count Uncategorized: {content['uncategorizedcount']}
+
+    {uncategorized}
+    -----
+    Count Ignored: {content['ignored_count']}
+
+    {ignored}
+    """
+
 
 def get_content_relese(content: str) -> dict:
     """Generate Content of release note description"""
@@ -74,8 +135,6 @@ for content in main_content:
     dict_content[content.split("(->)")[0]] = data_content
 main_content = dict_content
 
-core.info(f"Email body - {main_content}")
-
 email_info = env.from_string(template_content).render(**{
     "content": body,
     "json_content": main_content,
@@ -85,3 +144,4 @@ core.info(f"Content body - { body }")
 core.info(f"Email body - {email_info}")
 
 core.set_output('html_data', email_info)
+core.set_output('markdown_data', to_markdown(main_content))
