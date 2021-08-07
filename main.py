@@ -20,62 +20,64 @@ env.trim_blocks = True
 env.lstrip_blocks = True
 
 def change_to_md(change: dict) -> str:
-    return f"""#### [Title: {change['title']} - PR: {change['number']}]({change['url']}, "url")
-    Merged At: {change['mergedat']}
-    Author: {change['author']}
+    return f"""#### [Title: {change.get('title')} - PR: {change.get('number')}]({change.get('url')}, "url")
+    Merged At: {change.get('mergedat')}
+    Author: {change.get('author')}
     Body:
-    {change['body']}\n
+    {change.get('body')}\n
     """
 
 def to_markdown(content: dict) -> str:
     changelog = ""
-    if content["changelog"]:
-        if content["changelog"]["Features"]:
+    if content.get("changelog"):
+        if content.get("changelog").get("Features"):
             changelog += "### Features\n"
             changelog += "".join(
-                [change_to_md(change) for change in content["changelog"]["Features"]]
+                [change_to_md(change) for change in content.get("changelog").get("Features")]
             )
 
-        if content["changelog"]["Fixes"]:
+        if content.get("changelog").get("Fixes"):
             changelog += "### Fixes\n"
             changelog += "".join(
-                [change_to_md(change) for change in content["changelog"]["Fixes"]]
+                [change_to_md(change) for change in content.get("changelog").get("Fixes")]
             )
 
-        if content["changelog"]["Tests"]:
+        if content.get("changelog").get("Tests"):
             changelog += "### Tests\n"
             changelog += "".join(
-                [change_to_md(change) for change in content["changelog"]["Tests"]]
+                [change_to_md(change) for change in content.get("changelog").get("Tests")]
             )
 
     uncategorized = ""
-    if content["uncategorized"]:
+    if content.get("uncategorized"):
         uncategorized += "### Uncategorized\n"
         uncategorized += "".join(
-            [change_to_md(change) for change in content["uncategorized"]]
+            [change_to_md(change) for change in content.get("uncategorized")]
         )
 
     ignored = ""
-    if content["ignored"]:
+    if content.get("ignored"):
         ignored += "### Ignored\n"
         ignored += "".join(
-            [change_to_md(change) for change in content["ignored"]]
+            [change_to_md(change) for change in content.get("ignored")]
         )
 
+    print(content)
+
     return f"""
-    # Fithub {content['repo']}
+    # Fithub {content.get('repo')}
     ## Update:
-       {content['fromtag']} -> {content['totag']}
+       {content.get('fromtag')} -> {content.get('totag')}
     -----
-    Count Categorized: {content['categorizedcount']}
+    Count Categorized: {content.get('categorizedcount')}
 
     {changelog}
     -----
-    Count Uncategorized: {content['uncategorizedcount']}
+    Count Uncategorized: {content.get('uncategorizedcount')}
 
     {uncategorized}
     -----
-    Count Ignored: {content['ignored_count']}
+    Count Ignored: {content.get('ignored_count')}
 
     {ignored}
     """
@@ -145,3 +147,4 @@ core.info(f"Email body - {email_info}")
 
 core.set_output('html_data', email_info)
 core.set_output('markdown_data', to_markdown(main_content))
+

@@ -2,4 +2,3 @@ actions-toolkit==0.0.5
 Jinja2==3.0.1
 MarkupSafe==2.0.1
 markdown2==2.4.0
-markdown-to-json==1.0.0
