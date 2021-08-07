@@ -20,7 +20,7 @@ env.trim_blocks = True
 env.lstrip_blocks = True
 
 def change_to_md(change: dict) -> str:
-    return f"""#### [Title: {change.get('title')} - PR: {change.get('number')}]({change.get('url')}, "url")\nMerged At: {change.get('merged_at')}\nAuthor: {change.get('author')}\nBody:\n{change.get('body')}\n\n"""
+    return f"""#### Title: [{change.get('title', '')} - PR: {change.get('number')}]({change.get('url')}, "url")\nMerged At: {change.get('merged_at')}\nAuthor: {change.get('author')}\nBody:\n{change.get('body')}\n\n"""
 
 def to_markdown(content: dict) -> str:
     changelog = ""
